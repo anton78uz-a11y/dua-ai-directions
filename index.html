@@ -200,6 +200,15 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="expand-hint">Подробнее</div>
     </div>
 
+    <!-- Schroders Research Assistant -->
+    <div class="card" onclick="openModal('schroders-ra')">
+      <div class="co">Schroders + Google Cloud</div>
+      <div class="sub">Мульти-агентный research assistant &middot; Vertex AI &middot; 2025</div>
+      <span class="tag">Multi-Agent</span>
+      <div class="body">Отчёт по компании: с нескольких дней до минут. Агенты по сбору данных (отчёты, filings, новости) + агенты по анализу + summary node. Жёсткий human-in-the-loop review.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
     <!-- Deutsche Bank -->
     <div class="card card-sm">
       <div class="co">Deutsche Bank Lumina</div>
@@ -285,6 +294,23 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="expand-hint">Подробнее</div>
     </div>
 
+    <!-- JPMorgan Moneyball -->
+    <div class="card" onclick="openModal('moneyball')">
+      <div class="co">JPMorgan — Moneyball</div>
+      <div class="sub">Поведенческая аналитика PM &middot; Spectrum &middot; 40 лет данных</div>
+      <span class="tag">Behavioral AI</span>
+      <div class="body">AI показывает управляющему, как он и рынок вели себя в аналогичных ситуациях. Выявляет bias: ранняя фиксация прибыли, удержание убыточных позиций. AI как зеркало для PM.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Vanguard QEG -->
+    <div class="card card-sm">
+      <div class="co">Vanguard QEG</div>
+      <div class="sub">ML в активно управляемых equity-фондах</div>
+      <span class="tag">Factor Signals</span>
+      <div class="body">ML для уточнения факторных сигналов, динамики экспозиций, обнаружения связей между макро и доходностью акций. Рост альфы без увеличения риска. PM полностью ответственны за решения.</div>
+    </div>
+
     <!-- JPMorgan Coach -->
     <div class="card card-sm">
       <div class="co">JPMorgan — Coach AI</div>
@@ -318,6 +344,15 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="body">AI предсказывает будущие ордера и возможности для внутренних кросс-сделок. Снижает market impact и торговые издержки. Цель — сократить ручные процессы вдвое, чтобы люди фокусировались на генерации доходности.</div>
     </div>
 
+    <!-- JPMorgan LOXM -->
+    <div class="card" onclick="openModal('loxm')">
+      <div class="co">JPMorgan — LOXM</div>
+      <div class="sub">Deep RL для execution &middot; $180M экономии/год &middot; Окупаемость 24 мес</div>
+      <span class="tag">Execution AI</span>
+      <div class="body">Liquidity Optimization Execution Manager: deep reinforcement learning для оптимизации исполнения крупных ордеров. ~15% улучшение качества. План: 40% всего трейдинга JPM под LOXM к 2026.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
     <!-- Execution Algorithms -->
     <div class="card" onclick="openModal('execution')">
       <div class="co">AI для исполнения сделок</div>
@@ -325,6 +360,14 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
       <span class="tag">Execution Algos</span>
       <div class="body">Reinforcement Learning для оптимизации VWAP, LSTM для block trades (экономия 1-2 bps на каждой акции S&P 100 ежедневно), Safe RL с нулевыми compliance violations.</div>
       <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Overbond -->
+    <div class="card card-sm">
+      <div class="co">Overbond — COBI-Pricing</div>
+      <div class="sub">ML для buy-side ценообразования облигаций</div>
+      <span class="tag">Fixed Income</span>
+      <div class="body">AI-модель для алгоритмического pricing облигаций и best execution в RFQ-процессе. TCA-модели для анализа distance-to-cover и tension по контрагентам. Лучшее доказательство best execution для клиентов.</div>
     </div>
 
     <!-- Citadel -->
@@ -426,6 +469,14 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
       <div class="sub">19M+ частных компаний &middot; Agentic AI для middle-market M&A</div>
       <span class="tag">Deal Sourcing</span>
       <div class="body">Находит founder-owned и non-sponsored бизнесы, которых нет в стандартных классификаторах. Фокус на middle-market M&A. AI sourcing, скрининг и построение conviction.</div>
+    </div>
+
+    <!-- V7/Beam PE Agents -->
+    <div class="card card-sm">
+      <div class="co">V7 / Beam — PE Portfolio Agents</div>
+      <div class="sub">AI-агенты для непрерывного мониторинга &middot; 95% экономии времени</div>
+      <span class="tag">Portfolio Monitoring</span>
+      <div class="body">Агенты для мониторинга KPI, ковенантов, автоматизации LP-репортинга. Переход от квартального к непрерывному мониторингу. 95% экономии времени на сборку и нормализацию данных из разнородных источников портфельных компаний.</div>
     </div>
 
     <!-- Alternative Data -->
@@ -714,6 +765,84 @@ footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padd
   <h4>Что интересно для ДУА</h4>
   <p>Подход BlackRock к ограничениям AI: инструмент не дает рекомендаций, не выходит за границы платформы, содержит фильтрацию. Это ответ на вопрос «а как быть с галлюцинациями» — встраивать ограничения в сам продукт.</p>
   <div class="src">Источники: blackrock.com/aladdin/solutions/aladdin-copilot</div>
+</div>
+</div>
+
+<!-- Schroders Research Assistant Modal -->
+<div class="overlay" id="modal-schroders-ra" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Schroders + Google Cloud</div>
+  <div class="sub">Мульти-агентный research assistant на Vertex AI</div>
+  <span class="tag">Multi-Agent &middot; 2025</span>
+  <h4>Архитектура</h4>
+  <p>Построен совместно с Google Cloud на Vertex AI. Три уровня агентов:</p>
+  <ul>
+    <li><strong>Агенты сбора</strong> — загружают отчёты, filings, новости, презентации</li>
+    <li><strong>Агенты анализа</strong> — суммаризация, извлечение метрик, сравнительный анализ</li>
+    <li><strong>Summary node</strong> — финальный синтез с перекрёстной проверкой</li>
+  </ul>
+  <h4>Результаты</h4>
+  <div class="metric-row">
+    <span class="metric">Отчёт по компании: дни → минуты</span>
+    <span class="metric">20-30 компаний на аналитика</span>
+  </div>
+  <p>Аналитик мониторит 20-30 «активных» и ещё 20 watchlist-компаний с near-real-time апдейтами. Отслеживаются метрики accuracy и latency. Жёсткий human-in-the-loop review.</p>
+  <h4>Отличие от GAiiA</h4>
+  <p>GAiiA — для private equity и due diligence. Research Assistant — для equity research публичных компаний. Разные команды, разные задачи, один принцип: AI готовит, человек решает.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Самый релевантный кейс для аналитиков Джиоева и Попцовой. Та же задача: мониторить десятки эмитентов, готовить отчёты, отслеживать изменения. Schroders показывает, что multi-agent подход реально работает в production.</p>
+  <div class="src">Источники: cloud.google.com/blog/topics/customers/how-schroders-built-its-multi-agent-financial-analysis-research-assistant</div>
+</div>
+</div>
+
+<!-- JPMorgan Moneyball Modal -->
+<div class="overlay" id="modal-moneyball" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">JPMorgan — Moneyball</div>
+  <div class="sub">Поведенческая аналитика для портфельных управляющих</div>
+  <span class="tag">Behavioral AI &middot; Spectrum Platform</span>
+  <h4>Что делает</h4>
+  <p>GenAI-инструмент встроен в Spectrum — платформу управления портфелями JPMorgan AM. Показывает PM, как он и рынок вели себя в аналогичных ситуациях в прошлом. Построен на 40 годах исторических данных.</p>
+  <h4>Какие bias выявляет</h4>
+  <ul>
+    <li><strong>Disposition effect</strong> — ранняя фиксация прибыли по растущим позициям</li>
+    <li><strong>Loss aversion</strong> — удержание убыточных позиций в надежде на разворот</li>
+    <li><strong>Anchoring</strong> — привязка к цене входа вместо актуальной оценки</li>
+    <li><strong>Overconfidence</strong> — чрезмерная концентрация в «любимых» именах</li>
+  </ul>
+  <h4>Аналог: NBIM Investment Simulator</h4>
+  <p>NBIM делает похожее: анализирует trading history PM и выдаёт behavioural scorecard. Пока post-factum, но цель — near real-time подсказки по сделкам.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Направление, которое напрямую улучшает качество инвестиционных решений — без замены PM. AI не говорит «купи/продай», а показывает паттерны в собственном поведении управляющего. Релевантно для команд Харина (акции) и Жорниста (облигации).</p>
+  <div class="src">Источники: jpmorgan.com/technology, institutional investor</div>
+</div>
+</div>
+
+<!-- JPMorgan LOXM Modal -->
+<div class="overlay" id="modal-loxm" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">JPMorgan — LOXM</div>
+  <div class="sub">Liquidity Optimization Execution Manager</div>
+  <span class="tag">Execution AI &middot; Deep RL</span>
+  <h4>Что делает</h4>
+  <p>Deep reinforcement learning система для оптимизации исполнения крупных ордеров: как дробить, на какие площадки направлять, когда исполнять. Обучена на миллиардах исторических сделок. Учитывает market impact, качество venue, ликвидность.</p>
+  <h4>Результаты</h4>
+  <div class="metric-row">
+    <span class="metric">~15% улучшение execution</span>
+    <span class="metric">$180M экономии/год</span>
+    <span class="metric">Окупаемость 24 мес</span>
+  </div>
+  <p>План: до 40% всего трейдинга JPM across asset classes под управлением LOXM к 2026 году.</p>
+  <h4>Регуляторный аспект</h4>
+  <p>18-месячная работа с регуляторами. Встроенные explainability-инструменты: система объясняет, почему приняла каждое решение. AI встроен в compliance by-design — не обходит контроль, а является его частью.</p>
+  <h4>Уровень автоматизации</h4>
+  <p>Это один из немногих кейсов «высокой автоматизации» в asset management. Параметры и цели задают люди, исполнение — AI. Human oversight + kill-switch.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Для команды Денисова: LOXM — эталон того, как AI может реально экономить деньги на исполнении. Даже если Альфа-Капитал не будет строить свой LOXM, понимание этого подхода помогает при выборе внешних execution-платформ и оценке качества исполнения.</p>
+  <div class="src">Источники: businessinsider.com, linkedin.com/dr-mongi-hamdi</div>
 </div>
 </div>
 
