@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI в управлении активами — мировой опыт | Альфа-Капитал</title>
+<style>
+:root {
+  --dark: #1B2332; --dark2: #252F3F;
+  --accent: #3B82F6; --accent-light: #DBEAFE; --accent-dark: #1D4ED8;
+  --red: #EF3124; --green: #059669; --green-light: #D1FAE5;
+  --amber: #D97706; --amber-light: #FEF3C7;
+  --light: #F8FAFC; --white: #FFF; --gray: #64748B;
+  --gray-light: #E2E8F0; --gray-lighter: #F1F5F9;
+  --text: #1E293B; --text-light: #64748B;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06); --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif;color:var(--text);line-height:1.65;background:var(--light)}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--gray-light);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-size:15px;font-weight:700;color:var(--text)}
+nav .logo span{color:var(--red)}
+nav ul{list-style:none;display:flex;gap:24px}
+nav ul li a{color:var(--gray);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+nav ul li a:hover{color:var(--text)}
+
+/* Hero */
+.hero{background:var(--white);padding:130px 40px 64px;text-align:center;border-bottom:1px solid var(--gray-light)}
+.hero-content{max-width:780px;margin:0 auto}
+.hero-badge{display:inline-block;background:var(--gray-lighter);color:var(--gray);padding:6px 16px;border-radius:50px;font-size:13px;font-weight:500;margin-bottom:24px}
+.hero h1{font-size:44px;font-weight:800;line-height:1.15;margin-bottom:18px;letter-spacing:-1.5px;color:var(--dark)}
+.hero p{font-size:18px;color:var(--text-light);max-width:640px;margin:0 auto;line-height:1.7}
+
+/* Category sections */
+.cat-section{padding:72px 40px;border-bottom:1px solid var(--gray-light)}
+.cat-section:nth-child(odd){background:var(--white)}
+.cat-section:nth-child(even){background:var(--light)}
+.container{max-width:1140px;margin:0 auto}
+.cat-header{margin-bottom:40px}
+.cat-num{display:inline-block;background:var(--accent);color:var(--white);width:32px;height:32px;border-radius:8px;text-align:center;line-height:32px;font-size:14px;font-weight:800;margin-bottom:14px}
+.cat-title{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:10px;color:var(--dark)}
+.cat-desc{font-size:16px;color:var(--text-light);max-width:700px;line-height:1.7}
+.cat-try{margin-top:10px;font-size:14px;color:var(--accent-dark);font-weight:600}
+
+/* Cards grid */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+
+/* Case card */
+.card{background:var(--white);border:1px solid var(--gray-light);border-radius:14px;padding:24px 28px;cursor:pointer;transition:box-shadow .2s,transform .15s;position:relative}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.card .co{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:2px}
+.card .sub{font-size:12px;color:var(--gray);margin-bottom:12px}
+.card .tag{display:inline-block;background:var(--dark);color:var(--white);padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-bottom:10px}
+.card .body{font-size:14px;color:var(--text-light);line-height:1.6}
+.card .expand-hint{margin-top:14px;font-size:12px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:4px}
+.card .expand-hint::after{content:'';display:inline-block;width:16px;height:16px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233B82F6' stroke-width='2'%3E%3Cpath stroke-linecap='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* Small card (no expand) */
+.card-sm{cursor:default}
+.card-sm:hover{transform:none}
+.card-sm .body{font-size:13px}
+
+/* Modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;justify-content:center;align-items:flex-start;padding:60px 20px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;max-width:720px;width:100%;padding:40px 44px;position:relative;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-close{position:absolute;top:16px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-light);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gray);transition:background .15s}
+.modal-close:hover{background:var(--gray-lighter)}
+.modal .co{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.modal .sub{font-size:13px;color:var(--gray);margin-bottom:6px}
+.modal .tag{display:inline-block;background:var(--dark);color:var(--white);padding:3px 12px;border-radius:5px;font-size:12px;font-weight:700;margin-bottom:20px}
+.modal h4{font-size:15px;font-weight:700;color:var(--dark);margin:20px 0 8px}
+.modal p,.modal li{font-size:15px;color:var(--text-light);line-height:1.7}
+.modal ul{padding-left:20px;margin:8px 0}
+.modal .metric-row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.modal .metric{background:var(--accent-light);color:var(--accent-dark);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700}
+.modal .src{margin-top:20px;font-size:12px;color:var(--gray);font-style:italic}
+
+/* DUA section */
+.dua-section{padding:72px 40px;background:var(--dark);color:var(--white)}
+.dua-section .cat-title{color:var(--white)}
+.dua-section .cat-desc{color:rgba(255,255,255,0.6)}
+.dua-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+.dua-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:28px 32px}
+.dua-card h4{font-size:18px;font-weight:700;margin-bottom:10px}
+.dua-card p{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.65}
+.dua-card .dua-tag{display:inline-block;margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px}
+.dua-card .dua-tag.idea{background:rgba(59,130,246,0.2);color:#93c5fd}
+.dua-card .dua-tag.exp{background:rgba(5,150,105,0.2);color:#6ee7b7}
+
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.exp-item{background:rgba(255,255,255,0.04);border-radius:10px;padding:16px 20px}
+.exp-item h5{font-size:13px;font-weight:700;margin-bottom:6px}
+.exp-item.ok h5{color:#6ee7b7}
+.exp-item.fail h5{color:#fca5a5}
+.exp-item p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+
+/* Footer */
+footer{background:var(--dark);color:rgba(255,255,255,0.3);text-align:center;padding:28px;font-size:13px;border-top:1px solid rgba(255,255,255,0.05)}
+
+/* Animations */
+.fade-up{opacity:0;transform:translateY(20px);transition:all .5s cubic-bezier(.16,1,.3,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  .hero{padding:100px 20px 48px}
+  .hero h1{font-size:30px}
+  .cat-section{padding:48px 20px}
+  .cat-title{font-size:26px}
+  .cards{grid-template-columns:1fr}
+  nav ul{display:none}
+  nav{padding:0 20px}
+  .modal{padding:28px 24px}
+  .dua-grid,.exp-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>A</span> Альфа-Капитал</div>
+  <ul>
+    <li><a href="#cat1">Research</a></li>
+    <li><a href="#cat2">Отчетность</a></li>
+    <li><a href="#cat3">Трейдинг</a></li>
+    <li><a href="#cat4">Pre-IPO</a></li>
+    <li><a href="#cat5">Ассистенты</a></li>
+    <li><a href="#dua">Идеи ДУА</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">ДУА &middot; Рабочая встреча &middot; Февраль 2026</div>
+    <h1>Как управляющие компании мира используют AI</h1>
+    <p>Обзор международного опыта по категориям. Конкретные кейсы, инструменты и выводы — чтобы решить, что может быть полезно для нашей команды.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CATEGORY 1: Research & Analytics -->
+<!-- ============================================ -->
+<section class="cat-section" id="cat1">
+<div class="container">
+  <div class="cat-header fade-up">
+    <div class="cat-num">1</div>
+    <h2 class="cat-title">Исследование компаний и рынков</h2>
+    <p class="cat-desc">Самое распространенное применение AI в asset management: ускорение сбора и анализа информации по компаниям, секторам, рынкам. Практически все крупные УК начинали именно с этого.</p>
+    <p class="cat-try">Что может быть полезно для ДУА: ускорение research по эмитентам, мониторинг новостного фона, первичный анализ компаний для pre-IPO</p>
+  </div>
+  <div class="cards">
+
+    <!-- AlphaSense -->
+    <div class="card" onclick="openModal('alphasense')">
+      <div class="co">AlphaSense</div>
+      <div class="sub">AI-платформа для финансового research &middot; $500M+ ARR &middot; Топ-50 AM</div>
+      <span class="tag">Deep Research</span>
+      <div class="body">AI-поиск по финансовым документам, транскриптам earnings calls, SEC-файлингам, брокерским отчетам. Мульти-агентная архитектура для автоматического research по 10,000+ источников.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Hebbia -->
+    <div class="card" onclick="openModal('hebbia')">
+      <div class="co">Hebbia Matrix</div>
+      <div class="sub">AI-анализ документов &middot; 1/3 крупнейших AM &middot; $10K/seat/год</div>
+      <span class="tag">Document Analysis</span>
+      <div class="body">Обработала 1 млрд страниц. Мульти-документные запросы с мульти-шаговым рассуждением. 92% точность на финансовых документах (vs 68% у базового RAG).</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Goldman Sachs -->
+    <div class="card" onclick="openModal('gs')">
+      <div class="co">Goldman Sachs</div>
+      <div class="sub">GS AI Assistant &middot; 46,000 сотрудников &middot; Мульти-LLM</div>
+      <span class="tag">AI Assistant</span>
+      <div class="body">Суммаризация 20-страничного отчета: с 20-30 минут до менее 2 минут. Специализированные версии: Banker Copilot, Research Assistant — настроены под конкретные подразделения.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Morgan Stanley -->
+    <div class="card" onclick="openModal('ms')">
+      <div class="co">Morgan Stanley</div>
+      <div class="sub">AI @ MS Assistant &middot; GPT-4 &middot; 100K+ документов</div>
+      <span class="tag">Wealth Management</span>
+      <div class="body">Доступ к базе ~100,000 исследовательских отчетов. 98%+ команд советников используют. Эффективность поиска документов выросла с 20% до 80%.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- UBS Red -->
+    <div class="card" onclick="openModal('ubs')">
+      <div class="co">UBS Red</div>
+      <div class="sub">AI-ассистент &middot; 52,000 сотрудников &middot; 280+ AI-кейсов</div>
+      <span class="tag">Скрининг</span>
+      <div class="body">Сканирует 300,000 компаний за 20 секунд. Генерирует buy-side идеи и pitch-листы для клиентов. 60,000 документов по инвестиционным продуктам и исследованиям.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Deutsche Bank -->
+    <div class="card card-sm">
+      <div class="co">Deutsche Bank Lumina</div>
+      <div class="sub">AI-агент на базе Google Gemini &middot; Vertex AI</div>
+      <span class="tag">Research Agent</span>
+      <div class="body">Автоматизирует анализ данных и рабочие процессы аналитиков. Работа, которая занимала дни, выполняется за минуты. Строгий контроль приватности данных.</div>
+    </div>
+
+    <!-- Man Group -->
+    <div class="card" onclick="openModal('man')">
+      <div class="co">Man Group — AlphaGPT</div>
+      <div class="sub">$175 млрд AUM &middot; Мульти-агентная система &middot; UK</div>
+      <span class="tag">Agentic AI</span>
+      <div class="body">4 AI-агента работают как команда: поиск, анализ, оспаривание выводов, контроль. Генерируют торговые гипотезы за минуты вместо дней. Десятки сигналов прошли инвестком.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- BloombergGPT -->
+    <div class="card card-sm">
+      <div class="co">BloombergGPT</div>
+      <div class="sub">50 млрд параметров &middot; 363 млрд токенов финансовых данных</div>
+      <span class="tag">Foundation Model</span>
+      <div class="body">Специализированная LLM для финансов: sentiment-анализ, NER, классификация новостей. Bloomberg Terminal обрабатывает 5,000+ оригинальных историй и 1.5 млн из 175K источников в день. Но: GPT-4 общего назначения превосходит на многих задачах.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ============================================ -->
+<!-- CATEGORY 2: Portfolio Analytics & Reporting -->
+<!-- ============================================ -->
+<section class="cat-section" id="cat2">
+<div class="container">
+  <div class="cat-header fade-up">
+    <div class="cat-num">2</div>
+    <h2 class="cat-title">Аналитика портфелей и клиентская отчетность</h2>
+    <p class="cat-desc">AI для генерации комментариев к портфелям, автоматизации рутинных отчетов, мониторинга позиций и поведенческих искажений управляющих.</p>
+    <p class="cat-try">Что может быть полезно для ДУА: автоматизация рыночных комментариев, подготовка материалов для клиентов и сейлзов, мониторинг позиций</p>
+  </div>
+  <div class="cards">
+
+    <!-- BlackRock Auto Commentary -->
+    <div class="card" onclick="openModal('blackrock')">
+      <div class="co">BlackRock — Auto Commentary</div>
+      <div class="sub">$11.5 трлн AUM &middot; Aladdin: $21.6T &middot; Morgan Stanley — первый клиент</div>
+      <span class="tag">Генерация отчетов</span>
+      <div class="body">AI генерирует персонализированные комментарии к портфелям для wealth-адвайзеров. Объединяет risk analytics + CIO outlook + данные клиента. Адвайзер проверяет и редактирует результат.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- FactSet -->
+    <div class="card card-sm">
+      <div class="co">FactSet — AI Portfolio Commentary</div>
+      <div class="sub">AI-генерация портфельных отчетов &middot; Ускорение в 8 раз</div>
+      <span class="tag">Reporting</span>
+      <div class="body">Автоматическая генерация комментариев по портфелю на основе данных FactSet. Компания заявляет об ускорении процесса подготовки отчетов в 8 раз. Transcript Assistant — AI-анализ транскриптов earnings calls.</div>
+    </div>
+
+    <!-- Bloomberg PORT -->
+    <div class="card card-sm">
+      <div class="co">Bloomberg — AI Portfolio Commentary</div>
+      <div class="sub">PORT Enterprise &middot; Запуск сентябрь 2025</div>
+      <span class="tag">Commentary</span>
+      <div class="body">AI-объяснения драйверов доходности по fixed income и equity портфелям. Встроен в Bloomberg PORT Enterprise. Отдельный модуль Gen AI Document Insights для ускоренного анализа документов.</div>
+    </div>
+
+    <!-- NBIM -->
+    <div class="card" onclick="openModal('nbim')">
+      <div class="co">NBIM — суверенный фонд Норвегии</div>
+      <div class="sub">$1.8 трлн AUM &middot; 600 сотрудников &middot; Claude (Anthropic)</div>
+      <span class="tag">Flagship Case</span>
+      <div class="body">AI мониторит новости по 9,000 компаниям, анализирует earnings calls, делает запросы к Snowflake на обычном языке. Investment Simulator выявляет поведенческие искажения управляющих.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Aladdin Copilot -->
+    <div class="card" onclick="openModal('aladdin')">
+      <div class="co">BlackRock — Aladdin Copilot</div>
+      <div class="sub">Интеллектуальный ассистент платформы Aladdin</div>
+      <span class="tag">Platform AI</span>
+      <div class="body">GenAI-ассистент для всех клиентов Aladdin. «Интеллектуальная соединительная ткань» между модулями: генерирует отчеты, суммаризирует исследования, дает проактивные алерты. Контент-фильтрация против галлюцинаций.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- JPMorgan Coach -->
+    <div class="card card-sm">
+      <div class="co">JPMorgan — Coach AI</div>
+      <div class="sub">«Speed layer» для PM и советников</div>
+      <span class="tag">Decision Support</span>
+      <div class="body">Во время рыночной волатильности апреля 2025 работал как быстрый слой для персонализированных ответов клиентам. Существенный рост продаж и улучшение дисциплины решений. LLM Suite развернут для 200K сотрудников за 8 месяцев.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ============================================ -->
+<!-- CATEGORY 3: Trading & Execution -->
+<!-- ============================================ -->
+<section class="cat-section" id="cat3">
+<div class="container">
+  <div class="cat-header fade-up">
+    <div class="cat-num">3</div>
+    <h2 class="cat-title">Трейдинг и исполнение</h2>
+    <p class="cat-desc">AI для оптимизации исполнения сделок, transaction cost analysis, прогнозирования ликвидности. Рынок AI-трейдинга — $75.5 млрд к 2034.</p>
+    <p class="cat-try">Что может быть полезно для ДУА: оптимизация REPO-операций, TCA, анализ рыночной микроструктуры для команды Денисова</p>
+  </div>
+  <div class="cards">
+
+    <!-- NBIM Trading -->
+    <div class="card card-sm">
+      <div class="co">NBIM — AI в трейдинге</div>
+      <div class="sub">$100M экономии в год на торговых издержках &middot; Цель: $400M</div>
+      <span class="tag">Best Execution</span>
+      <div class="body">AI предсказывает будущие ордера и возможности для внутренних кросс-сделок. Снижает market impact и торговые издержки. Цель — сократить ручные процессы вдвое, чтобы люди фокусировались на генерации доходности.</div>
+    </div>
+
+    <!-- Execution Algorithms -->
+    <div class="card" onclick="openModal('execution')">
+      <div class="co">AI для исполнения сделок</div>
+      <div class="sub">Reinforcement Learning &middot; LSTM &middot; Safe RL</div>
+      <span class="tag">Execution Algos</span>
+      <div class="body">Reinforcement Learning для оптимизации VWAP, LSTM для block trades (экономия 1-2 bps на каждой акции S&P 100 ежедневно), Safe RL с нулевыми compliance violations.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Citadel -->
+    <div class="card card-sm">
+      <div class="co">Citadel</div>
+      <div class="sub">$100B+ AUM &middot; ML с 1990-х &middot; AI Assistant (2025)</div>
+      <span class="tag">Quant + AI</span>
+      <div class="body">В 2025 запустили AI Assistant для повышения продуктивности equities-команд. TensorFlow для equity стратегий. «Pod shop» модель с независимыми командами под жестким risk control.</div>
+    </div>
+
+    <!-- Fixed Income AI -->
+    <div class="card" onclick="openModal('fi')">
+      <div class="co">AI в Fixed Income и REPO</div>
+      <div class="sub">Электронификация &middot; AI-pricing &middot; Автоматический букинг</div>
+      <span class="tag">Fixed Income</span>
+      <div class="body">AI-pricing поддерживает 10M+ бумаг, real-time для 3M+ инструментов. Автоматический анализ ковенантов в проспектах облигаций. Эффективность +22-40% по основным классам активов.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Bridgewater -->
+    <div class="card" onclick="openModal('bridgewater')">
+      <div class="co">Bridgewater — AIA Labs</div>
+      <div class="sub">$100+ млрд AUM &middot; AI-фонд на $2 млрд &middot; +11% за 2025</div>
+      <span class="tag">AI Fund</span>
+      <div class="body">Выделенная AI-лаборатория. Строят «искусственного инвестора» для фундаментального анализа в масштабе, недоступном человеку. Генерирует альфу, не коррелирующую с человеческими стратегиями.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Two Sigma -->
+    <div class="card card-sm">
+      <div class="co">Two Sigma</div>
+      <div class="sub">$60B+ AUM &middot; GenAI более 5 лет &middot; NLP более 10 лет</div>
+      <span class="tag">AI как OS</span>
+      <div class="body">AI как операционная система для кван-исследований. «Исследовательская воронка инвертируется: узкое место — уже не генерация идей, а их оценка». Агенты входят в portfolio room как constraint-aware копилоты.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ============================================ -->
+<!-- CATEGORY 4: Pre-IPO & Private Markets -->
+<!-- ============================================ -->
+<section class="cat-section" id="cat4">
+<div class="container">
+  <div class="cat-header fade-up">
+    <div class="cat-num">4</div>
+    <h2 class="cat-title">Pre-IPO и частные рынки</h2>
+    <p class="cat-desc">AI для скрининга частных компаний, ускорения due diligence, мониторинга портфельных компаний. 235+ VC-фирм уже используют AI для инвестиционных решений.</p>
+    <p class="cat-try">Что может быть полезно для ДУА: ускорение воронки pre-IPO идей (132+ компаний), первичный скрининг, автоматизация DD</p>
+  </div>
+  <div class="cards">
+
+    <!-- EQT Motherbrain -->
+    <div class="card" onclick="openModal('eqt')">
+      <div class="co">EQT Ventures — Motherbrain</div>
+      <div class="sub">&euro;2.6 млрд собрано &middot; Работает с 2016 &middot; Швеция</div>
+      <span class="tag">Deal Sourcing</span>
+      <div class="body">Сканирует миллионы компаний, строит скоринговые модели, интегрирует неструктурированные данные (трафик, PDF, академические статьи). Wolt, Freepik найдены через систему. $100M+ инвестиций через AI.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- Schroders GAiiA -->
+    <div class="card" onclick="openModal('schroders')">
+      <div class="co">Schroders Capital — GAiiA</div>
+      <div class="sub">$99.3 млрд AUM &middot; Private Equity &middot; UK</div>
+      <span class="tag">PE Due Diligence</span>
+      <div class="body">AI-аналитик для PE: скрининг, ускорение due diligence, черновики инвестиционных саммари. Virtual IC Agent рецензирует документы и добавляет инсайты о рисках. 40+ реальных инвестиционных кейсов за год.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+    <!-- SignalFire -->
+    <div class="card card-sm">
+      <div class="co">SignalFire — Beacon AI</div>
+      <div class="sub">$1B+ привлечено &middot; 650M+ людей в базе &middot; 80M+ компаний</div>
+      <span class="tag">VC Intelligence</span>
+      <div class="body">Анализирует данные 650M+ людей и 80M+ организаций. AI задействован на всех 4 стадиях: sourcing, due diligence, инвестиция, value creation. Идентифицирует таланты и мониторит рыночные тренды.</div>
+    </div>
+
+    <!-- Correlation Ventures -->
+    <div class="card card-sm">
+      <div class="co">Correlation Ventures</div>
+      <div class="sub">ML на 100,000+ венчурных раундах &middot; $365M AUM</div>
+      <span class="tag">ML Scoring</span>
+      <div class="body">Обучена на 100K+ раундов. Оценивает факторы: команда, рынок, конкуренция и их влияние на возврат инвестиций. Инвестиционное решение — менее 2 недель, часто за 24 часа (вместо месяцев). В портфеле MosaicML, Upstart.</div>
+    </div>
+
+    <!-- PitchBook -->
+    <div class="card card-sm">
+      <div class="co">PitchBook Navigator</div>
+      <div class="sub">GenAI для private markets &middot; Интеграция с ChatGPT через MCP</div>
+      <span class="tag">Private Markets</span>
+      <div class="body">Natural language запросы по приватным рынкам: компании, сделки, рыночные темы. Ускоряет sourcing, DD, market analysis. Запущен ноябрь 2025.</div>
+    </div>
+
+    <!-- Grata -->
+    <div class="card card-sm">
+      <div class="co">Grata</div>
+      <div class="sub">19M+ частных компаний &middot; Agentic AI для middle-market M&A</div>
+      <span class="tag">Deal Sourcing</span>
+      <div class="body">Находит founder-owned и non-sponsored бизнесы, которых нет в стандартных классификаторах. Фокус на middle-market M&A. AI sourcing, скрининг и построение conviction.</div>
+    </div>
+
+    <!-- Alternative Data -->
+    <div class="card" onclick="openModal('altdata')">
+      <div class="co">Альтернативные данные для pre-IPO</div>
+      <div class="sub">Рынок $18.7 млрд &middot; Прогноз $135.8 млрд к 2030</div>
+      <span class="tag">Alternative Data</span>
+      <div class="body">Web-трафик, спутниковые снимки, данные о найме, app downloads, транзакционные данные, sentiment — как прокси для оценки частных компаний до IPO. Точность прогнозов +25% при интеграции с ML.</div>
+      <div class="expand-hint">Подробнее</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ============================================ -->
+<!-- CATEGORY 5: General AI Assistants -->
+<!-- ============================================ -->
+<section class="cat-section" id="cat5">
+<div class="container">
+  <div class="cat-header fade-up">
+    <div class="cat-num">5</div>
+    <h2 class="cat-title">AI-ассистенты: с чего обычно начинают</h2>
+    <p class="cat-desc">Универсальные AI-инструменты — самый низкий барьер входа. Не требуют интеграции, дают мгновенную пользу на рутинных задачах. Большинство компаний начинают именно отсюда.</p>
+    <p class="cat-try">Что может быть полезно для ДУА: попробовать на подготовке текстов, суммаризации, анализе документов — и оценить, есть ли реальная польза</p>
+  </div>
+  <div class="cards">
+
+    <div class="card card-sm">
+      <div class="co">Claude (Anthropic)</div>
+      <div class="sub">Лидер в финансовом анализе &middot; Team: $25-30/чел/мес</div>
+      <span class="tag">LLM</span>
+      <div class="body">Длинный контекст, сильное рассуждение, анализ документов. NBIM выбрали как основной инструмент для 600 сотрудников. Claude for Financial Services запущен в 2025 со специализацией под финанализ.</div>
+    </div>
+
+    <div class="card card-sm">
+      <div class="co">ChatGPT Enterprise (OpenAI)</div>
+      <div class="sub">GPT-4 для бизнеса &middot; от ~$60/чел/мес</div>
+      <span class="tag">LLM</span>
+      <div class="body">Анализ документов, Code Interpreter, генерация контента. Goldman Sachs и JPMorgan используют в мультимодельной архитектуре — маршрутизация задач между разными LLM в зависимости от типа.</div>
+    </div>
+
+    <div class="card card-sm">
+      <div class="co">Microsoft Copilot</div>
+      <div class="sub">AI в Excel, Word, PowerPoint, Outlook &middot; $30/чел/мес</div>
+      <span class="tag">Productivity</span>
+      <div class="body">Copilot for Finance — специализированные фичи для финансового моделирования в Excel, автогенерации отчетов. Встроен в привычную экосистему Microsoft 365.</div>
+    </div>
+
+    <div class="card card-sm">
+      <div class="co">Perplexity</div>
+      <div class="sub">AI-поиск с источниками &middot; Pro: $20/мес</div>
+      <span class="tag">Search</span>
+      <div class="body">Быстрый factcheck и market intelligence с указанием источников. Полезно для оперативных проверок фактов и обзоров рынков — когда нужен быстрый ответ с ссылками.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ============================================ -->
+<!-- DUA Section -->
+<!-- ============================================ -->
+<section class="dua-section" id="dua">
+<div class="container">
+  <div class="cat-header fade-up">
+    <h2 class="cat-title">Идеи ДУА и собственный опыт</h2>
+    <p class="cat-desc">Две идеи, которые уже сформулировал департамент, — и что уже сейчас работает (и что нет).</p>
+  </div>
+
+  <div class="dua-grid fade-up">
+    <div class="dua-card">
+      <span class="dua-tag idea">Идея 1</span>
+      <h4>AI-ассистент: аналитика портфеля клиента</h4>
+      <p>Автоматизация подготовки рекомендаций и новостной базы по эмитентам в портфеле клиента. Ускорение выпуска срочных рыночных комментариев. Снижение времени на рутинные отчеты.</p>
+      <p style="margin-top:12px;color:rgba(255,255,255,0.4);font-size:13px"><strong style="color:rgba(255,255,255,0.7)">Мировой аналог:</strong> BlackRock Auto Commentary, FactSet AI Portfolio Commentary, Bloomberg PORT — все работают по модели «AI-черновик + проверка экспертом».</p>
+    </div>
+    <div class="dua-card">
+      <span class="dua-tag idea">Идея 2</span>
+      <h4>AI-агент: исследование компаний и рынков</h4>
+      <p>Структурированная выжимка из тысяч источников (новости, отчеты, filings, веб-страницы). Для «холодного» анализа новых компаний (вкл. pre-IPO) и постоянного мониторинга существующих.</p>
+      <p style="margin-top:12px;color:rgba(255,255,255,0.4);font-size:13px"><strong style="color:rgba(255,255,255,0.7)">Мировой аналог:</strong> AlphaSense Deep Research, Hebbia Matrix, EQT Motherbrain, Schroders GAiiA — все используют паттерн «AI собирает, человек решает».</p>
+    </div>
+  </div>
+
+  <div class="exp-grid fade-up" style="margin-top:36px">
+    <div class="exp-item ok">
+      <h5>Что уже работает</h5>
+      <p>Аннотации к материалам в ленте новостей. Расшифровка еженедельных коммуникаций. Подготовка постов в телеграм. Быстрое формирование текстов для ПИФов. Ключевое: эксперт контролирует результат.</p>
+    </div>
+    <div class="exp-item fail">
+      <h5>Что не сработало</h5>
+      <p>Генерация текста для аналитики без контроля: низкое качество, ошибки. Учебные материалы: неинтересный текст. Регуляторные документы (КИД): предписание ЦБ. Вывод: без эксперта в цепочке AI ненадежен.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  Альфа-Капитал &middot; Блок «Цифровой бизнес» &middot; Февраль 2026 &middot; По материалам NBIM, BlackRock, Goldman Sachs, JPMorgan, McKinsey, BCG и 30+ источников
+</footer>
+
+<!-- ============================================ -->
+<!-- MODALS -->
+<!-- ============================================ -->
+
+<!-- AlphaSense Modal -->
+<div class="overlay" id="modal-alphasense" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">AlphaSense</div>
+  <div class="sub">AI-платформа для финансового research</div>
+  <span class="tag">Deep Research &middot; $500M+ ARR</span>
+  <h4>Что делает</h4>
+  <p>AI-поиск по финансовым документам: транскрипты earnings calls, SEC-файлинги, брокерские отчеты, новости. В 2025 добавили Financial Data — объединение структурированных данных с качественными инсайтами через чат-интерфейс. Мульти-агентная архитектура для автоматического research по 10,000+ источников.</p>
+  <h4>Кто использует</h4>
+  <p>Топ-50 AM глобально. #8 CNBC Disruptor 50 (2025). Fortune Top 50 AI Innovators. Хедж-фонды, инвестбанки, управляющие компании, PE/VC.</p>
+  <h4>Стоимость</h4>
+  <p>$10,000-$20,000/seat/год. Enterprise-контракты от $50K до $1M+.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Может закрыть потребность в быстром research по эмитентам — для аналитиков (Джиоев, Попцова) и pre-IPO команды. Единая платформа для поиска вместо ручного сбора из множества источников.</p>
+  <div class="src">Источники: alpha-sense.com, vendr.com/marketplace/alphasense</div>
+</div>
+</div>
+
+<!-- Hebbia Modal -->
+<div class="overlay" id="modal-hebbia" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Hebbia Matrix</div>
+  <div class="sub">AI-платформа глубокого анализа документов</div>
+  <span class="tag">Document Analysis &middot; $10K/seat/год</span>
+  <h4>Что делает</h4>
+  <p>Matrix UI с мульти-агентной системой. Мульти-документный запрос с мульти-шаговым рассуждением. Обработала 1 млрд страниц. В июле 2025 приобрела FlashDocs для генерации документов. 92% точность на финансовых документах (vs 68% у базового RAG).</p>
+  <h4>Кто использует</h4>
+  <p>KKR, MetLife, Centerview Partners, ВВС США. 1/3 крупнейших AM по AUM. Управляющие компании, юридические фирмы, PE.</p>
+  <h4>Стоимость</h4>
+  <p>Professional: $10,000/seat/год (безлимитный reasoning). Lite: $3,000-$3,500/seat/год.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Глубокий анализ пакетов документов для pre-IPO due diligence. Проспекты, контракты, юридические документы — то, что сейчас вручную разбирает команда Брагина.</p>
+  <div class="src">Источники: hebbia.com, eesel.ai/blog/hebbia-ai, globalbankingandfinance.com</div>
+</div>
+</div>
+
+<!-- Goldman Sachs Modal -->
+<div class="overlay" id="modal-gs" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Goldman Sachs — GS AI Assistant</div>
+  <div class="sub">Мультимодельная архитектура: GPT, Gemini, LLaMA, Claude</div>
+  <span class="tag">AI Assistant &middot; 46,000 сотрудников</span>
+  <h4>Что делает</h4>
+  <p>Запущен в середине 2025 для всех 46,000 сотрудников после пилота на 10,000. Специализированные варианты: Banker Copilot, Research Assistant — настроены под подразделения. Маршрутизация задач между моделями.</p>
+  <h4>Заявляемые результаты</h4>
+  <div class="metric-row">
+    <span class="metric">20-стр. отчет: 20-30 мин → &lt;2 мин</span>
+    <span class="metric">78% чувствуют себя продуктивнее</span>
+    <span class="metric">-40% на стандартных задачах</span>
+  </div>
+  <p style="font-size:13px;color:var(--gray);margin-top:4px">Метрики из собственных отчетов Goldman Sachs</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Подход с разными версиями ассистента под разные роли. Не один инструмент для всех, а настройка промптов и контекста под конкретные задачи аналитиков, PM, трейдеров.</p>
+  <div class="src">Источники: fortune.com, klover.ai, cnbc.com</div>
+</div>
+</div>
+
+<!-- Morgan Stanley Modal -->
+<div class="overlay" id="modal-ms" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Morgan Stanley</div>
+  <div class="sub">AI @ Morgan Stanley Assistant + AskResearchGPT + Debrief</div>
+  <span class="tag">Wealth Management &middot; GPT-4</span>
+  <h4>AI @ Morgan Stanley Assistant</h4>
+  <p>Развернут для финансовых советников. Доступ к ~100,000 исследовательских отчетов и документов. 98%+ команд советников используют. Эффективность поиска: с 20% до 80%. Сотрудники задают в 3 раза больше вопросов, чем в предыдущем инструменте.</p>
+  <h4>AskResearchGPT</h4>
+  <p>Для институционального бизнеса: синтезирует неструктурированные данные, позволяет отвечать на сложные вопросы из множества исследовательских продуктов.</p>
+  <h4>AI Debrief</h4>
+  <p>Протоколирование встреч: с согласия клиента генерирует заметки, создает email-резюме для редактирования, автоматически сохраняет в Salesforce.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Модель AskResearchGPT — аналитик задает вопрос по множеству research-продуктов и получает синтезированный ответ. Близко к задаче «единой точки доступа ко всем рассылкам».</p>
+  <div class="src">Источники: morganstanley.com press releases</div>
+</div>
+</div>
+
+<!-- UBS Modal -->
+<div class="overlay" id="modal-ubs" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">UBS Red</div>
+  <div class="sub">Проприетарный AI-ассистент на Azure OpenAI + Azure AI Search</div>
+  <span class="tag">Скрининг &middot; 52,000 сотрудников</span>
+  <h4>Что делает</h4>
+  <p>Знаковая база: ~60,000 документов по инвестиционным продуктам, исследованиям и отчетам CIO. 280+ активных AI-кейсов по всему бизнесу. Может сканировать 300,000 компаний за 20 секунд. Генерирует buy-side идеи и pitch-листы для клиентов.</p>
+  <h4>AI-клоны аналитиков</h4>
+  <p>UBS создает «цифровых аватаров» исследовательских аналитиков с использованием GenAI и технологии синтетических медиа (Synthesia). Необычный подход.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Скорость скрининга большого количества компаний. Для pre-IPO команды, которая просматривает 132+ компаний, подобный инструмент мог бы ускорить первичную фильтрацию.</p>
+  <div class="src">Источники: bloomberg.com, thefinancialanalyst.net, klover.ai</div>
+</div>
+</div>
+
+<!-- Man Group Modal -->
+<div class="overlay" id="modal-man" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Man Group — AlphaGPT</div>
+  <div class="sub">Мульти-агентная AI-система для генерации торговых идей</div>
+  <span class="tag">Agentic AI &middot; $175 млрд AUM</span>
+  <h4>Архитектура</h4>
+  <p>Процесс разбит на 4 агента-роли:</p>
+  <ul>
+    <li><strong>Агент поиска</strong> — ищет данные и идеи</li>
+    <li><strong>Агент интерпретации</strong> — анализирует информацию</li>
+    <li><strong>Агент-челленджер</strong> — проверяет логику и оспаривает выводы</li>
+    <li><strong>Агент-контролер</strong> — утверждает итоговый результат</li>
+  </ul>
+  <h4>Результаты</h4>
+  <p>Несколько десятков сигналов прошли инвестиционный комитет и готовятся к запуску в живую торговлю. Генерация жизнеспособных исследовательских концепций за минуты вместо дней. Человек по-прежнему принимает финальное решение.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Паттерн «AI-челленджер» — когда один AI проверяет другого — может быть полезен при подготовке investment memos: AI генерирует черновик, второй AI задает критические вопросы, аналитик финализирует.</p>
+  <div class="src">Источники: ai-street.co, hedgeweek.com</div>
+</div>
+</div>
+
+<!-- NBIM Modal -->
+<div class="overlay" id="modal-nbim" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">NBIM — суверенный фонд Норвегии</div>
+  <div class="sub">$1.8 трлн AUM &middot; 600 сотрудников &middot; Claude (Anthropic)</div>
+  <span class="tag">Flagship Case</span>
+  <h4>Что используют</h4>
+  <p>Claude (Anthropic) — интегрирован на все устройства в организации. Развернули для всех 600 сотрудников за 2 месяца от пилота.</p>
+  <h4>Конкретные задачи</h4>
+  <ul>
+    <li>Мониторинг новостей по 9,000 компаниям в портфеле</li>
+    <li>Анализ earnings calls и выделение ключевых изменений</li>
+    <li>Запросы к Snowflake DWH на естественном языке</li>
+    <li>Анализ компенсационных пакетов для голосования акционеров (95% точность)</li>
+    <li>Investment Simulator — выявление поведенческих bias управляющих</li>
+  </ul>
+  <h4>Заявляемые результаты</h4>
+  <div class="metric-row">
+    <span class="metric">20% экономия времени/нед</span>
+    <span class="metric">213K часов/год</span>
+    <span class="metric">$100M/год на трейдинге</span>
+  </div>
+  <p style="font-size:13px;color:var(--gray);margin-top:4px">Цифры из публикаций самого NBIM и кейс-стади Anthropic</p>
+  <h4>Организационный подход</h4>
+  <p>50 AI-амбассадоров с регулярными встречами для обмена use cases. Разные учебные треки для разных ролей.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Масштаб похож: NBIM — 600 человек, у нас 29. Их подход: начали с простых задач (мониторинг, суммаризация), постепенно усложняли. Амбассадоры — не обязаловка, а энтузиасты внутри команды.</p>
+  <div class="src">Источники: claude.com/customers/nbim, smithstephen.com, top1000funds.com</div>
+</div>
+</div>
+
+<!-- BlackRock Modal -->
+<div class="overlay" id="modal-blackrock" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">BlackRock — Auto Commentary</div>
+  <div class="sub">AI-генерация комментариев к портфелям для адвайзеров</div>
+  <span class="tag">Генерация отчетов &middot; $11.5T AUM</span>
+  <h4>Как работает</h4>
+  <p>Объединяет: risk analytics из Aladdin + CIO outlook + данные конкретного клиента → генерирует персонализированный комментарий к портфелю. Адвайзер проверяет и при необходимости редактирует.</p>
+  <h4>Первый клиент</h4>
+  <p>Morgan Stanley — запуск октябрь 2025. Развернут для 16,000 financial advisors. Интегрирован через API с системами Morgan Stanley.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Прямой аналог идеи «AI-ассистент для аналитики портфеля клиента». Тот же паттерн: AI собирает данные и генерирует черновик, человек проверяет и финализирует. В контексте задачи ДУА по увеличению объемов клиентских материалов без роста штата.</p>
+  <div class="src">Источники: blackrock.com/aladdin, lowtouch.ai</div>
+</div>
+</div>
+
+<!-- Aladdin Copilot Modal -->
+<div class="overlay" id="modal-aladdin" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">BlackRock — Aladdin Copilot</div>
+  <div class="sub">Генеративный AI-ассистент для платформы Aladdin ($21.6T активов)</div>
+  <span class="tag">Platform AI</span>
+  <h4>Что делает</h4>
+  <p>«Интеллектуальная соединительная ткань» между модулями платформы. Мгновенные ответы для поддержки ключевых инвестиционных решений. Генерирует отчеты, суммаризирует исследования, проактивные алерты. Контент-фильтрация и параметры для ограничения рисков галлюцинаций. Принципиально: не дает инвестиционных рекомендаций.</p>
+  <h4>eFront Copilot</h4>
+  <p>Отдельный AI-инструмент для private markets — анализ риска и доходности альтернативных инвестиций.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Подход BlackRock к ограничениям AI: инструмент не дает рекомендаций, не выходит за границы платформы, содержит фильтрацию. Это ответ на вопрос «а как быть с галлюцинациями» — встраивать ограничения в сам продукт.</p>
+  <div class="src">Источники: blackrock.com/aladdin/solutions/aladdin-copilot</div>
+</div>
+</div>
+
+<!-- Execution Modal -->
+<div class="overlay" id="modal-execution" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">AI для оптимизации исполнения сделок</div>
+  <div class="sub">Reinforcement Learning, LSTM, Safe RL</div>
+  <span class="tag">Execution Algos</span>
+  <h4>Основные методы</h4>
+  <ul>
+    <li><strong>RL для VWAP</strong> — Dual-level RL с PPO. Учитывает U-образный паттерн внутридневных объемов. Адаптация к market regime в реальном времени</li>
+    <li><strong>LSTM для block trades</strong> — нейросеть предсказывает оптимальное время и размер ордеров. Экономия 1-2 bps на каждой акции S&P 100 ежедневно</li>
+    <li><strong>Safe RL</strong> — безопасный агент с ограничениями по compliance. Лучшая execution при нулевых violations</li>
+    <li><strong>AI Order Slicing</strong> — real-time прогноз ликвидности для оптимального разбиения крупных ордеров. Прогноз на 20-30% точнее</li>
+  </ul>
+  <h4>Что интересно для ДУА</h4>
+  <p>Для команды Денисова: оптимизация REPO-операций и исполнения сделок. Virtu Financial (75% крупнейших AM используют их TCA) предлагает ML-аналитику как сервис — не требует собственной разработки.</p>
+  <div class="src">Источники: sciencedirect.com, arxiv.org</div>
+</div>
+</div>
+
+<!-- Fixed Income Modal -->
+<div class="overlay" id="modal-fi" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">AI в Fixed Income и REPO</div>
+  <div class="sub">Три тренда 2025-2026: электронификация, конвергенция рынков, ускорение AI</div>
+  <span class="tag">Fixed Income</span>
+  <h4>Применения</h4>
+  <ul>
+    <li><strong>Автоматический букинг REPO</strong> — сбор, обогащение и автоматическая пересылка сделок. Минимизация ошибок</li>
+    <li><strong>AI-pricing</strong> — поддержка 10M+ бумаг, real-time pricing для 3M+ инструментов. +22-40% эффективности</li>
+    <li><strong>GenAI для проспектов</strong> — автоматический анализ ковенантов, условий, рисков. Часы → минуты</li>
+    <li><strong>Risk detection</strong> — +15-40% в детекции рисков, $1.2B экономии на fraud prevention/год</li>
+  </ul>
+  <h4>Что интересно для ДУА</h4>
+  <p>REPO — один из ключевых источников дохода ДУА (план 250 млн руб на 2026). Автоматизация букинга и AI-pricing могут быть релевантны для команды Жорниста и Щербакова.</p>
+  <div class="src">Источники: citigroup.com, valantic.com, tradersmagazine.com</div>
+</div>
+</div>
+
+<!-- Bridgewater Modal -->
+<div class="overlay" id="modal-bridgewater" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Bridgewater Associates — AIA Labs</div>
+  <div class="sub">AI-лаборатория под руководством со-CIO Greg Jensen</div>
+  <span class="tag">AI Fund &middot; $2 млрд</span>
+  <h4>Подход</h4>
+  <p>Запустили фонд на $2 млрд, где ML — основа принятия решений. Используют модели от OpenAI, Anthropic и Perplexity. Строят «искусственного инвестора» для фундаментального анализа в масштабе, недоступном человеку.</p>
+  <h4>Результаты (2025)</h4>
+  <div class="metric-row">
+    <span class="metric">+11% за 2025</span>
+    <span class="metric">$2B под AI-управлением</span>
+  </div>
+  <p>Генерирует «уникальную альфу, не коррелирующую с тем, что делают наши люди». Люди управляют рисками, приобретают данные, исполняют сделки.</p>
+  <h4>Контекст</h4>
+  <p>Рэй Далио: 35-40 лет использования AI для принятия решений. Принципы закодированы в алгоритмы. Проект «Digital Ray» — AI-клон для инвестиционного коучинга. Это дальний горизонт — но показывает направление.</p>
+  <div class="src">Источники: bridgewater.com/aia-labs, ai-street.co, fortune.com</div>
+</div>
+</div>
+
+<!-- EQT Modal -->
+<div class="overlay" id="modal-eqt" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">EQT Ventures — Motherbrain</div>
+  <div class="sub">AI-платформа для pre-IPO скрининга с 2016 года</div>
+  <span class="tag">Deal Sourcing &middot; &euro;2.6 млрд</span>
+  <h4>Что делает</h4>
+  <p>Сканирует миллионы компаний, строит скоринговые модели, интегрирует неструктурированные данные: трафик, PDF-документы, академические статьи. Использует «агентные оценки» для перекрестной верификации публичных и внутренних данных EQT.</p>
+  <h4>Результаты</h4>
+  <p>Платформа участвовала в инвестициях на $100M+ из ~$900M общего объема. Портфель: 300+ компаний. Wolt, Freepik, Einride найдены через систему. €2.6 млрд собрано через три фонда.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Самый релевантный кейс для команды pre-IPO (Айвазов, Дында, Жульев). При воронке 132+ компаний AI-скрининг может ускорить стадию «первый взгляд» и помочь не пропустить интересные идеи. Motherbrain работает с 2016 — это не пилот, а зрелый продукт.</p>
+  <div class="src">Источники: tech.eu, news.crunchbase.com</div>
+</div>
+</div>
+
+<!-- Schroders Modal -->
+<div class="overlay" id="modal-schroders" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Schroders Capital — GAiiA</div>
+  <div class="sub">Generative AI Investment Analyst для private equity</div>
+  <span class="tag">PE Due Diligence &middot; $99.3 млрд AUM</span>
+  <h4>GAiiA</h4>
+  <p>AI-аналитик для private equity: эффективный скрининг больших объемов данных, ускорение due diligence, создание первых черновиков инвестиционных саммари. Использован в 40+ инвестиционных кейсах за первый год. Принят командами primary и secondary инвестиций.</p>
+  <h4>Virtual Investment Committee Agent</h4>
+  <p>Работает совместно с GAiiA. Рецензирует предварительные документы, добавляет инсайты о секторной динамике, бизнес-модели, факторах риска. Основан на исторических данных инвестиций Schroders Capital.</p>
+  <h4>Human-in-the-loop</h4>
+  <p>Инвестиционные профессионалы полностью ответственны за ревью AI-выходов, финализацию документации и инвестиционные решения.</p>
+  <h4>Что интересно для ДУА</h4>
+  <p>Прямой аналог идеи «AI-агент для исследования компаний» в части pre-IPO. GAiiA готовит черновик investment memo, Virtual IC Agent задает «неудобные» вопросы — а команда принимает решение. Модель, которая снимает опасение «AI заменит аналитика».</p>
+  <div class="src">Источники: schroders-capital.prezly.com, fintechreview.net</div>
+</div>
+</div>
+
+<!-- Alt Data Modal -->
+<div class="overlay" id="modal-altdata" onclick="closeModal(event)">
+<div class="modal" onclick="event.stopPropagation()">
+  <button class="modal-close" onclick="closeThis(this)">&times;</button>
+  <div class="co">Альтернативные данные для оценки частных компаний</div>
+  <div class="sub">Рынок $18.7 млрд → $135.8 млрд к 2030 (CAGR 63%)</div>
+  <span class="tag">Alternative Data</span>
+  <h4>Типы альтернативных данных</h4>
+  <ul>
+    <li><strong>Web-трафик:</strong> оценка роста пользовательской базы, product-market fit (SimilarWeb, Semrush)</li>
+    <li><strong>Спутниковые снимки:</strong> загруженность складов, строительство, retail footfall (Orbital Insight, Planet Labs)</li>
+    <li><strong>Данные о найме:</strong> темпы роста команды, ключевые позиции (LinkedIn, Revelio Labs)</li>
+    <li><strong>App downloads:</strong> метрики мобильных продуктов до IPO (Sensor Tower, data.ai)</li>
+    <li><strong>Транзакционные данные:</strong> потребительские расходы на продукты компании (Bloomberg Second Measure)</li>
+    <li><strong>Sentiment analysis:</strong> настроения по бренду в соцсетях (Brandwatch, Meltwater)</li>
+  </ul>
+  <h4>Что интересно для ДУА</h4>
+  <p>Для pre-IPO скрининга: web-трафик и app downloads как прокси для оценки роста компаний до IPO. Данные о найме — как признак масштабирования. Не требует дорогих подписок — многие базовые данные доступны через бесплатные версии SimilarWeb и LinkedIn.</p>
+  <div class="src">Источники: battlefin.com, tribe.ai, integrity-research.com</div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================ -->
+<script>
+function openModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  e.currentTarget.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeThis(btn) {
+  btn.closest('.overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.open').forEach(m => {
+      m.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+});
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
